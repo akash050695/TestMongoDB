@@ -8,17 +8,20 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 public class TestConnection {
+	private static String DATABASE_NAME = "ror";
+	private static String COLLECTION_NAME = "users";
+
 	public static void main(String[] args) {
 		MongoClientURI uri = new MongoClientURI("mongodb://akash:akash@ds249269.mlab.com:49269/ror");
 		MongoClient client = new MongoClient(uri);
 		User user = new User(574365, "akash");
 		Gson gson = new Gson();
-		MongoDatabase mongoDatabase = client.getDatabase("ror");
-		MongoCollection<Document> mongoCollection = mongoDatabase.getCollection("users");
+		MongoDatabase mongoDatabase = client.getDatabase(DATABASE_NAME);
+		MongoCollection<Document> mongoCollection = mongoDatabase.getCollection(COLLECTION_NAME);
 		String userJSON = gson.toJson(user);
 		System.out.println(userJSON);
 		Document document = new Document();
-		document.append("user1",userJSON);
+		document.append("user1", userJSON);
 		mongoCollection.insertOne(document);
 		FindIterable<Document> findIterable = mongoCollection.find();
 		for (Document document1 : findIterable) {
@@ -27,7 +30,7 @@ public class TestConnection {
 	}
 }
 
-class User{
+class User {
 	int id;
 	String name;
 
