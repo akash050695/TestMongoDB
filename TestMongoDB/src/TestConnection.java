@@ -11,28 +11,45 @@ public class TestConnection {
 	public static void main(String[] args) {
 		MongoClientURI uri = new MongoClientURI("mongodb://akash:akash@ds249269.mlab.com:49269/ror");
 		MongoClient client = new MongoClient(uri);
-		MongoDatabase mongoDatabase = client.getDatabase("ror");
-		MongoCollection<Document> mongoCollection = mongoDatabase.getCollection("users");
 		User user = new User(574365, "akash");
 		Gson gson = new Gson();
+		MongoDatabase mongoDatabase = client.getDatabase("ror");
+		MongoCollection<Document> mongoCollection = mongoDatabase.getCollection("users");
 		String userJSON = gson.toJson(user);
+		System.out.println(userJSON);
 		Document document = new Document();
-		mongoCollection.insertOne(document.parse(userJSON));
+		document.append("user1",userJSON);
+		mongoCollection.insertOne(document);
 		FindIterable<Document> findIterable = mongoCollection.find();
 		for (Document document1 : findIterable) {
-			User user1 = gson.fromJson(document1.toJson(), User.class);
-			System.out.println(user1);
+			System.out.println(document1);
 		}
 	}
 }
 
-class User extends Document {
+class User{
 	int id;
 	String name;
 
 	public User(int id, String name) {
 		super();
 		this.id = id;
+		this.name = name;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
 		this.name = name;
 	}
 
